@@ -1,0 +1,19 @@
+{
+  "name": "movies-api-rest",
+  "version": "1.0.0",
+  "description": "Web page created using html, css and js, also the movies database api is being consumed using axios to fetch the information",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielVeraAcero/Movies-DataBase.git"
+  },
+  "author": "Daniel Vera",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DanielVeraAcero/Movies-DataBase/issues"
+  },
+  "homepage": "https://github.com/DanielVeraAcero/Movies-DataBase#readme"
+}
