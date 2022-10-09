@@ -10,15 +10,15 @@ const APIMovies = axios.create({
         'Content-Type': 'application/json;charset=utf-8'
     },
     params: {
-        'api_key': api_key
+        'api_key': api_key,
+        'language': 'es',
     },
 });
 
 const APIUrlImgW300 = 'https://image.tmdb.org/t/p/w300';
-const moviesTrendingPreviewContainer = document.querySelector('.trendingPreview-movieList');
-const moviesCategoryPreviewContainer = document.querySelector('.categoriesPreview-list');
 
 async function getMoviesTrendingDayPreview() {
+    trendingMoviesPreviewList.innerHTML = '';
     const {data} = await APIMovies('/trending/movie/day');
     const movies = data.results;
     // console.log(movies);
@@ -31,12 +31,13 @@ async function getMoviesTrendingDayPreview() {
         movieImg.setAttribute('alt', movie.title)
         movieImg.setAttribute('src', `${APIUrlImgW300}${movie.poster_path}`) 
 
-        moviesTrendingPreviewContainer.append(movieContainer);
+        trendingMoviesPreviewList.append(movieContainer);
         movieContainer.append(movieImg)
     });
 }
 
 async function getCategoriesPreview() {
+    categoriesPreviewList.innerHTML = '';
     const {data} = await APIMovies('/genre/movie/list');
     const categories = data.genres;
     // console.log(categories);
@@ -50,9 +51,11 @@ async function getCategoriesPreview() {
 
         const categoryTitleText = document.createTextNode(category.name)
 
-        moviesCategoryPreviewContainer.append(categoryContainer);
+        categoriesPreviewList.append(categoryContainer);
         categoryContainer.append(categoryTitle);
         categoryTitle.append(categoryTitleText)
+
+        categoryTitle.addEventListener('click', () => location.hash = `#category=${category.id}-${category.name}`);
     });
 }
 
