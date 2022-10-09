@@ -1,14 +1,25 @@
-const APIMovies = 'https://api.themoviedb.org/3';
-const APIMoviesTrendingDay = `${APIMovies}/trending/movie/day` + api_key;
-const APIMoviesCategories = `${APIMovies}/genre/movie/list` + api_key;
-const APIUrlImgW300 = 'https://image.tmdb.org/t/p/w300';
+//! Using fetch
+// const APIMovies = 'https://api.themoviedb.org/3';
+// const APIMoviesTrendingDay = `${APIMovies}/trending/movie/day` + api_key;
+// const APIMoviesCategories = `${APIMovies}/genre/movie/list` + api_key + '&language=es';
 
+//! Using Axios
+const APIMovies = axios.create({
+    baseURL: 'https://api.themoviedb.org/3',
+    headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+    },
+    params: {
+        'api_key': api_key
+    },
+});
+
+const APIUrlImgW300 = 'https://image.tmdb.org/t/p/w300';
 const moviesTrendingPreviewContainer = document.querySelector('.trendingPreview-movieList');
 const moviesCategoryPreviewContainer = document.querySelector('.categoriesPreview-list');
 
-async function getMoviesTrendingDayPreview(url) {
-    const response = await fetch(url);
-    const data = await response.json();
+async function getMoviesTrendingDayPreview() {
+    const {data} = await APIMovies('/trending/movie/day');
     const movies = data.results;
     // console.log(movies);
     movies.forEach(movie => {        
@@ -25,9 +36,8 @@ async function getMoviesTrendingDayPreview(url) {
     });
 }
 
-async function getCategoriesPreview(url) {
-    const response = await fetch(url);
-    const data = await response.json();
+async function getCategoriesPreview() {
+    const {data} = await APIMovies('/genre/movie/list');
     const categories = data.genres;
     // console.log(categories);
     categories.forEach(category => {
@@ -46,5 +56,3 @@ async function getCategoriesPreview(url) {
     });
 }
 
-getMoviesTrendingDayPreview(APIMoviesTrendingDay)
-getCategoriesPreview(APIMoviesCategories)
