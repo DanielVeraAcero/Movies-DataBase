@@ -132,7 +132,7 @@ async function getMovieById(id) {
 }
 
 async function getRelatedMoviesId(id) {
-    const {data} = await APIMovies(`/movie/${id}/recommendations`);
+    const {data} = await APIMovies(`/movie/${id}/similar`);
     const relatedMovies = data.results;
     // console.log(relatedMovies);
     createMovies(relatedMovies, relatedMoviesContainer); 
