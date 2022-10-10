@@ -16,6 +16,7 @@ const APIMovies = axios.create({
 });
 
 const APIUrlImgW300 = 'https://image.tmdb.org/t/p/w300';
+const APIUrlImgW500 = 'https://image.tmdb.org/t/p/w500';
 
 //! Funciones utiles
 
@@ -25,6 +26,7 @@ function createMovies(movies, container) {
     movies.forEach(movie => {        
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
+        movieContainer.setAttribute('data-id', movie.id)
 
         const movieImg = document.createElement('img')
         movieImg.classList.add('movie-img')
@@ -32,7 +34,11 @@ function createMovies(movies, container) {
         movieImg.setAttribute('src', `${APIUrlImgW300}${movie.poster_path}`) 
 
         container.append(movieContainer);
-        movieContainer.append(movieImg)
+        movieContainer.append(movieImg);
+
+        movieContainer.addEventListener('click', () => {
+            location.hash = '#movie=' + movie.id
+        });
     });
 }
 
@@ -103,4 +109,31 @@ async function getMoviesByQuery(query) {
     console.log(movies);
     // console.log(movies);
     createMovies(movies, genericSection);
+}
+
+async function getMovieById(id) {
+    const {data: movie} = await APIMovies(`/movie/${id}`);
+    // console.log(movie);
+    const movieImgURL = APIUrlImgW500 + movie.poster_path;
+
+    headerSection.style.background = `
+        linear-gradient(180deg, 
+            rgba(0, 0, 0, 0.35) 19.27%, 
+            rgba(0, 0, 0, 0) 29.17%),
+        url(${movieImgURL})
+        `;
+    movieDetailTitle.textContent = movie.original_title;
+    movieDetailScore.textContent = movie.vote_average;
+    movieDetailDescription.textContent = movie.overview;
+    
+    createCategories(movie.genres, movieDetailCategoriesList)
+
+    getRelatedMoviesId(id);
+}
+
+async function getRelatedMoviesId(id) {
+    const {data} = await APIMovies(`/movie/${id}/recommendations`);
+    const relatedMovies = data.results;
+    // console.log(relatedMovies);
+    createMovies(relatedMovies, relatedMoviesContainer); 
 }
