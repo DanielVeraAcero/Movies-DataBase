@@ -85,3 +85,15 @@ async function getMoviesByCategory(id) {
     // console.log(movies);
     createMovies(movies, genericSection);    
 }
+
+async function getMoviesByQuery(query) {
+    const {data} = await APIMovies('/search/movie', {
+        params: {
+            query: query,
+        }
+    });
+    const movies = data.results;
+    console.log(movies);
+    // console.log(movies);
+    createMovies(movies, genericSection);
+}
