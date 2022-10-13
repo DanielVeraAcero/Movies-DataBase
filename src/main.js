@@ -20,8 +20,22 @@ const APIUrlImgW500 = 'https://image.tmdb.org/t/p/w500';
 
 //! Funciones utiles
 
-function createMovies(movies, container) {
-    container.innerHTML = '';
+// const lazyLoader = new IntersectionObserver(callback/*,  options */) //! No se envia el parametro options para observar todo el HTML
+const lazyLoader = new IntersectionObserver((movies) => {
+    // console.log(movies);
+    movies.forEach((movie) => {
+        // console.log(movie);
+        if (movie.isIntersecting) {
+            const urlImageMovie = movie.target.getAttribute('data-img');
+            movie.target.setAttribute('src', urlImageMovie);            
+        }
+    })
+});
+
+function createMovies(movies, container, {lazyLoad = false, clean = true}) {
+    if (clean) {
+        container.innerHTML = '';
+    }
 
     movies.forEach(movie => {        
         const movieContainer = document.createElement('div');
@@ -31,7 +45,8 @@ function createMovies(movies, container) {
         const movieImg = document.createElement('img')
         movieImg.classList.add('movie-img')
         movieImg.setAttribute('alt', movie.title)
-        movieImg.setAttribute('src', `${APIUrlImgW300}${movie.poster_path}`) 
+        movieImg.setAttribute((lazyLoad) ? 'data-img' : 'src' , `${APIUrlImgW300}${movie.poster_path}`) 
+        movieImg.addEventListener('error', () => movieImg.setAttribute('src', `https://via.placeholder.com/150x225/5c218a/ffffff?text=${movie.title}`))
 
         container.append(movieContainer);
         movieContainer.append(movieImg);
@@ -39,6 +54,10 @@ function createMovies(movies, container) {
         movieContainer.addEventListener('click', () => {
             location.hash = '#movie=' + movie.id
         });
+
+        if (lazyLoad) {
+            lazyLoader.observe(movieImg);
+        }
     });
 }
 
@@ -70,14 +89,38 @@ async function getMoviesTrendingDayPreview() {
     const {data} = await APIMovies('/trending/movie/day');
     const movies = data.results;
     // console.log(movies);
-    createMovies(movies, trendingMoviesPreviewList);    
+    createMovies(movies, trendingMoviesPreviewList, true);    
 }
 
 async function getMoviesTrendingDay() {
     const {data} = await APIMovies('/trending/movie/day');
     const movies = data.results;
     // console.log(movies);
-    createMovies(movies, genericSection);    
+    createMovies(movies, genericSection, {lazyLoad: true, clean: true});    
+
+    const btnLoadMore = document.createElement('button');
+    btnLoadMore.innerHTML = 'Cargar mas...';
+    genericSection.appendChild(btnLoadMore);
+
+    btnLoadMore.addEventListener('click', getPagesMoviesTrendingDay);
+}
+
+let page = 1;
+async function getPagesMoviesTrendingDay() {
+    const {data} = await APIMovies('/trending/movie/day', {
+        params: {
+            page: ++page,
+        }
+    });
+    const movies = data.results;
+    // console.log(movies);
+    createMovies(movies, genericSection, {lazyLoad: true, clean: false});    
+
+    const btnLoadMore = document.createElement('button');
+    btnLoadMore.innerHTML = 'Cargar mas...';
+    genericSection.appendChild(btnLoadMore);
+
+    btnLoadMore.addEventListener('click', getPagesMoviesTrendingDay);
 }
 
 async function getCategoriesPreview() {
@@ -95,7 +138,7 @@ async function getMoviesByCategory(id) {
     });
     const movies = data.results;
     // console.log(movies);
-    createMovies(movies, genericSection);    
+    createMovies(movies, genericSection, true);    
 }
 
 async function getMoviesByQuery(query) {
@@ -107,7 +150,7 @@ async function getMoviesByQuery(query) {
     const movies = data.results;
     console.log(movies);
     // console.log(movies);
-    createMovies(movies, genericSection);
+    createMovies(movies, genericSection, true);
 }
 
 async function getMovieById(id) {
@@ -134,5 +177,5 @@ async function getRelatedMoviesId(id) {
     const {data} = await APIMovies(`/movie/${id}/similar`);
     const relatedMovies = data.results;
     // console.log(relatedMovies);
-    createMovies(relatedMovies, relatedMoviesContainer); 
+    createMovies(relatedMovies, relatedMoviesContainer, true); 
 }
