@@ -53,10 +53,12 @@ function homePage() {
     trendingPreviewSection.classList.remove('inactive');
     categoriesPreviewSection.classList.remove('inactive');
     genericSection.classList.add('inactive');
-    movieDetailSection.classList.add('inactive');
+    movieDetailSection.classList.add('inactive');    
+    favoritesSection.classList.remove('inactive');
     
-    getMoviesTrendingDayPreview()
-    getCategoriesPreview()
+    getMoviesTrendingDayPreview();
+    getCategoriesPreview();
+    getLikedMovies();
 }
 
 function categoriesPage() {
