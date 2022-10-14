@@ -1,4 +1,5 @@
 let page = 1;
+let maxPage;
 let infiniteScroll;
 
 searchFormBtn.addEventListener('click', () => location.hash = '#search=' + searchFormInput.value.split(' ').join(''));
@@ -78,6 +79,8 @@ function categoriesPage() {
     headerCategoryTitle.innerHTML = categoryName;
 
     getMoviesByCategory(categoryId);
+
+    infiniteScroll = getPagesByCategory(categoryId);
 }
 
 function movieDetailsPage() {
@@ -116,6 +119,8 @@ function searchPage() {
     
     const [ , query] = location.hash.split('=');
     getMoviesByQuery(query)
+
+    infiniteScroll = getPagesMoviesByQuery(query);
 }
 
 function trendsPage() {
