@@ -48,10 +48,17 @@ function createMovies(movies, container, {lazyLoad = false, clean = true}) {
         movieImg.setAttribute((lazyLoad) ? 'data-img' : 'src' , `${APIUrlImgW300}${movie.poster_path}`) 
         movieImg.addEventListener('error', () => movieImg.setAttribute('src', `https://via.placeholder.com/150x225/5c218a/ffffff?text=${movie.title}`))
 
+        const movieBtn = document.createElement('button');
+        movieBtn.classList.add('movie-btn');
+        movieBtn.addEventListener('click', () => {
+            movieBtn.classList.toggle('movie-btn--liked');
+        });
+
         container.append(movieContainer);
         movieContainer.append(movieImg);
+        movieContainer.append(movieBtn);
 
-        movieContainer.addEventListener('click', () => {
+        movieImg.addEventListener('click', () => {
             location.hash = '#movie=' + movie.id
         });
 
