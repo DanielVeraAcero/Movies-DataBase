@@ -171,11 +171,10 @@ footer {
 }
 
 .categoriesPreview-list, .categories-list {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: relative;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, max-content));
+  justify-content: space-between;
 }
 
 .category-container--loading{
@@ -305,7 +304,7 @@ footer {
   margin-bottom: 8px;
   cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
 }
 

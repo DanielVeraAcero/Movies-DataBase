@@ -260,7 +260,7 @@ async function getRelatedMoviesId(id) {
     createMovies(relatedMovies, relatedMoviesContainer, true); 
 }
 
-function getLikedMovies(movie) {
+function getLikedMovies() {
     const likedMovies = likedMoviesList();
     const moviesArray = Object.values(likedMovies);
 

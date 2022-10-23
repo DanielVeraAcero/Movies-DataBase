@@ -54,7 +54,7 @@ function homePage() {
     categoriesPreviewSection.classList.remove('inactive');
     genericSection.classList.add('inactive');
     movieDetailSection.classList.add('inactive');    
-    favoritesSection.classList.remove('inactive');
+    favoritesSection.classList.add('inactive');
     
     getMoviesTrendingDayPreview();
     getCategoriesPreview();
